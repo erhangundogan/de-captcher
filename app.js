@@ -4,7 +4,7 @@ var request  = require("request"),
     url      = require("url");
 
 
-var decaptcher = function(username, password) {
+var decaptcher = exports.decaptcher = function(username, password) {
   this.username = username;
   this.password = password;
   this.timeout  = 0;
@@ -94,10 +94,10 @@ decaptcher.prototype.postPicture = function(pictureRequest, callback) {
     });
 };
 
-decaptcher.prototype.postBadPicture = function(majorID, minorID, callback) {
+decaptcher.prototype.reportBadResult = function(majorID, minorID, callback) {
   var self = this;
 
-  console.log((new Date()).toLocaleString() + " ==> [INFO postBadPicture] ==> " + JSON.stringify(self));
+  console.log((new Date()).toLocaleString() + " ==> [INFO reportBadResult] ==> " + JSON.stringify(self));
 
   request({
       url: 'http://poster.de-captcher.com',
@@ -124,7 +124,7 @@ decaptcher.prototype.postBadPicture = function(majorID, minorID, callback) {
     },
     function(error, response, body) {
       if (error) {
-        callback((new Date()).toLocaleString() + " ==> [ERROR postBadPicture] ==> " + error);
+        callback((new Date()).toLocaleString() + " ==> [ERROR reportBadResult] ==> " + error);
       } else {
         if (response.statusCode == 200 && body) {
           var items = body.split("|");
