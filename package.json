@@ -1,0 +1,18 @@
+{
+  "name": "de-captcher",
+  "version": "0.0.1",
+  "description": "de-captcher.com node.js wrapper",
+  "main": "app.js",
+  "dependencies": {
+    "request": ">= 2.25.0",
+    "mime": ">= 1.2.10"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/erhangundogan/de-captcher.git"
+  },
+  "author": "Erhan Gundogan",
+  "license": "MIT"
+}
