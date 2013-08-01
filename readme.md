@@ -20,6 +20,15 @@ Require library, Create object with your username/password and call functions
       console.log(result);
     });
 
+## Install
+
+    git clone https://github.com/erhangundogan/de-captcher.git
+
+OR
+
+    npm install de-captcher
+
+
 ## Functions
 
 * getBalance
