@@ -1,3 +1,8 @@
+/**
+ * de-captcher nodejs library
+ * by Erhan Gundogan <erhan@trposta.net>
+ */
+
 var request  = require("request"),
     mime     = require("mime"),
     fs       = require("fs"),
@@ -94,6 +99,13 @@ decaptcher.prototype.postPicture = function(pictureRequest, callback) {
     });
 };
 
+/**
+ * If captcha result is wrong you can report it with majorID/minorID in result set.
+ *
+ * @param majorID
+ * @param minorID
+ * @param callback
+ */
 decaptcher.prototype.reportBadResult = function(majorID, minorID, callback) {
   var self = this;
 
@@ -144,7 +156,12 @@ decaptcher.prototype.reportBadResult = function(majorID, minorID, callback) {
       }
     });
 };
-
+/**
+ * Get system load with percentage
+ * e.g. 57%
+ *
+ * @param callback
+ */
 decaptcher.prototype.getSystemLoad = function(callback) {
   var self = this;
   request.post("http://poster.de-captcher.com",
@@ -168,6 +185,12 @@ decaptcher.prototype.getSystemLoad = function(callback) {
     });
 };
 
+/**
+ * Get your request result message
+ *
+ * @param value
+ * @returns {string}
+ */
 decaptcher.prototype.getResultCode = function(value) {
   var result = null;
   switch(value) {

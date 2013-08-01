@@ -1,7 +1,7 @@
 {
   "name": "de-captcher",
-  "version": "0.0.1",
-  "description": "de-captcher.com node.js wrapper",
+  "version": "0.0.2",
+  "description": "de-captcher.com nodejs library",
   "main": "app.js",
   "dependencies": {
     "request": ">= 2.25.0",

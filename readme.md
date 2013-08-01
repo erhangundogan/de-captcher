@@ -1,9 +1,9 @@
-# de-captcher.com node.js library
+# de-captcher.com nodejs library
 
 de-captcher.com basically resolves captcha requests.
 You need an account from de-captcher.com to use this library.
 
-### Quickstart
+## Quickstart
 Require library, Create object with your username/password and call functions
 
     var Decaptcher = require("de-captcher").decaptcher;
@@ -20,7 +20,7 @@ Require library, Create object with your username/password and call functions
       console.log(result);
     });
 
-### Functions
+## Functions
 
 * getBalance
 
@@ -35,3 +35,10 @@ Require library, Create object with your username/password and call functions
 * setPictureProcess
 
 * setMultiPictureProcess
+
+
+## License
+
+Copyright 2013 Erhan Gundogan
+
+Licensed under the MIT License.
