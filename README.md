@@ -1,5 +1,7 @@
 # de-captcher.com nodejs library
 
+[![Build Status](https://travis-ci.org/erhangundogan/de-captcher.png?branch=master)](https://travis-ci.org/erhangundogan/de-captcher)
+
 http://de-captcher.com basically resolves captcha requests.
 You need an account for authentication so that you can use this library.
 

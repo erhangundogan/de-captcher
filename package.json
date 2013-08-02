@@ -1,6 +1,6 @@
 {
   "name": "de-captcher",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "de-captcher.com nodejs library",
   "main": "app.js",
   "dependencies": {
