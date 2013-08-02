@@ -1,7 +1,7 @@
 # de-captcher.com nodejs library
 
-de-captcher.com basically resolves captcha requests.
-You need an account from de-captcher.com to use this library.
+http://de-captcher.com basically resolves captcha requests.
+You need an account for authentication so that you can use this library.
 
 ## Quickstart
 Require library, Create object with your username/password and call functions
@@ -23,27 +23,28 @@ Require library, Create object with your username/password and call functions
 ## Install
 
     git clone https://github.com/erhangundogan/de-captcher.git
+    npm install
 
 OR
 
-    npm install de-captcher
+    npm install -d de-captcher
 
 
 ## Functions
 
-* getBalance
+* getBalance(callback) : Get your current balance status
 
-* postPicture
+* postPicture(<url or fs>, callback): send picture for process
 
-* reportBadResult
+* reportBadResult(majorID, minorID, callback): send bad picture process report
 
-* getSystemLoad
+* getSystemLoad(callback): get de-captcher system load
 
-* setTimeouts
+* setTimeouts(value): captcha resolve timeouts
 
-* setPictureProcess
+* setPictureProcess(value): captcha picture process type
 
-* setMultiPictureProcess
+* setMultiPictureProcess(value): multiple picture process type
 
 
 ## License
