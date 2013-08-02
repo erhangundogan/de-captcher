@@ -14,18 +14,12 @@ Require library, Create object with your username/password and call functions
       console.log(balance);
     });
 
-    // send image address or file system image
-    // http://www.google.com/recaptcha/learnmore ==> $("#recaptcha_image > img").attr(src);
-    decaptcher.postPicture(address, function(err, result) {
+    // send http address or file system image
+    decaptcher.postPicture(path.join(__dirname, "captcha.jpg"), function(err, result) {
       console.log(result);
     });
 
 ## Install
-
-    git clone https://github.com/erhangundogan/de-captcher.git
-    npm install
-
-OR
 
     npm install -d de-captcher
 
@@ -34,7 +28,7 @@ OR
 
 * getBalance(callback) : Get your current balance status
 
-* postPicture(<url or fs>, callback): send picture for process
+* postPicture(url/fs, callback): send picture for process
 
 * reportBadResult(majorID, minorID, callback): send bad picture process report
 
