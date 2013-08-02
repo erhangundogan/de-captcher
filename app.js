@@ -51,9 +51,7 @@ decaptcher.prototype.postPicture = function(pictureRequest, callback) {
   console.log((new Date()).toLocaleString() + " ==> [INFO postPicture] ==> " + JSON.stringify(self));
 
   var requestItem = url.parse(pictureRequest),
-      webRequest = requestItem.protocol == "http"  ||
-                   requestItem.protocol == "https" ||
-                   requestItem.protocol == "ftp";
+      webRequest = /^http|^https|^ftp/.test(requestItem.protocol);
 
   request({
       url: 'http://poster.de-captcher.com',
