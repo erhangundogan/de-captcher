@@ -6,10 +6,12 @@
 var request  = require("request"),
     mime     = require("mime"),
     fs       = require("fs"),
+    path     = require("path"),
     url      = require("url"),
     settings = require("./settings"),
     util     = require("./util"),
-    log      = require("./log").log;
+    Log      = require("./log").log,
+    log      = new Log();
 
 
 var decaptcher = exports.decaptcher = function(username, password) {
@@ -105,7 +107,7 @@ decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) 
               Text       : items[5]
             };
 
-            if (settings.log) log.write((new Date()).toLocaleString() + " ==> [INFO ReCAptcha] ==> " + JSON.stringify(result, null, 2));
+            if (settings.log) log.write((new Date()).toLocaleString() + " ==> [INFO ReCaptcha] ==> " + JSON.stringify(result, null, 2));
             callback(null, result);
           } else {
             callback(null, -1);
@@ -143,13 +145,17 @@ decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) 
     }
 
     streamFileName = path.join(__dirname, ".images", fileName);
-    var ws = fs.createWriteStream(streamFileName);
+    var ws = fs.createWriteStream(streamFileName, {flags:"a"});
 
     ws.on("error", function(err) {
-      console.log((new Date()).toLocaleString() + " ==> [ERROR postPicture WRITE STREAM] ==> " + err);
+      var msg = (new Date()).toLocaleString() + " ==> [ERROR postPicture WRITE STREAM] ==> " + err;
+      if (settings.log) log.write(msg);
+      console.log(msg);
     });
 
-    ws.on("drain", function() {
+    ws.on("finish", function() {
+      var msg = (new Date()).toLocaleString() + " ==> [INFO postPicture SAVE FINISHED]";
+      if (settings.log) log.write(msg);
       makeRequest(mimeType, streamFileName);
     });
 

@@ -1,6 +1,6 @@
 {
   "name": "de-captcher",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "de-captcher.com nodejs library",
   "main": "app.js",
   "dependencies": {
@@ -8,11 +8,12 @@
     "mime": ">= 1.2.10"
   },
   "devDependencies": {},
-  "scripts": {},
+  "engines": { "node": ">=0.10.5" },
+  "keywords": [ "captcha", "recaptcha", "de-captcher", "image processing" ],
   "repository": {
     "type": "git",
     "url": "http://github.com/erhangundogan/de-captcher.git"
   },
-  "author": "Erhan Gundogan",
+  "author": "Erhan Gundogan <erhan@trposta.net>",
   "license": "MIT"
 }
