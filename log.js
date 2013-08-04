@@ -5,6 +5,7 @@ var log = exports.log = function() {
 };
 
 log.prototype.getFileName = function() {
+  var dt = new Date();
   var fileName = dt.getFullYear()+""+("0"+(dt.getMonth()+1)).slice(-2)+""+("0"+dt.getDate()).slice(-2)+".log";
   return path.join(__dirname, ".log", fileName);
 };
