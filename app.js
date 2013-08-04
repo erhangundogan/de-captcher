@@ -16,6 +16,12 @@ var decaptcher = exports.decaptcher = function(username, password) {
   this.pictureProcess = 0;
 };
 
+/**
+ * getBalance
+ *   Get you balance credit
+ *
+ * @param callback
+ */
 decaptcher.prototype.getBalance = function(callback) {
   var self = this;
   request.post("http://poster.de-captcher.com",
@@ -40,15 +46,23 @@ decaptcher.prototype.getBalance = function(callback) {
 };
 
 /**
- * pictureRequest: HTTP or FileSystem picture file
- * e.g. https://www.google.com/images/srpr/logo4w.png
- *      ./images/logo/logo4w.png
- * @param pictureRequest
+ * postPicture
+ *   HTTP Post picture to de-captcher
+ *
+ * @param pictureRequest: HTTP or FileSystem picture file
+ *        e.g. https://www.google.com/images/srpr/logo4w.png
+ *             ./images/logo4w.png
+ * @param mimeType: image/jpeg, image/png etc.
  * @param callback
  */
-decaptcher.prototype.postPicture = function(pictureRequest, callback) {
+decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) {
   var self = this;
-  console.log((new Date()).toLocaleString() + " ==> [INFO postPicture] ==> " + JSON.stringify(self));
+  console.log((new Date()).toLocaleString() + " ==> [INFO postPicture] ==> " + pictureRequest);
+
+  if (!callback && mimeType && typeof(mimeType) == "function") {
+    callback = mimeType;
+    mimeType = null;
+  }
 
   var requestItem = url.parse(pictureRequest),
       webRequest = /^http|^https|^ftp/.test(requestItem.protocol);
@@ -70,7 +84,7 @@ decaptcher.prototype.postPicture = function(pictureRequest, callback) {
         'body': self.password
       } ,{
         'Content-Disposition' : 'form-data; name="pict"',
-        'Content-Type' : mime.lookup(pictureRequest),
+        'Content-Type' : mimeType ? mimeType : mime.lookup(pictureRequest),
         'body': webRequest ? request(pictureRequest) : fs.readFileSync(pictureRequest)
       }]
     },
@@ -98,7 +112,8 @@ decaptcher.prototype.postPicture = function(pictureRequest, callback) {
 };
 
 /**
- * If captcha result is wrong you can report it with majorID/minorID in result set.
+ * reportBadResult
+ *   If captcha result is wrong you can report it with majorID/minorID in result set.
  *
  * @param majorID
  * @param minorID
