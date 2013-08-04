@@ -16,8 +16,13 @@ Require library, Create object with your username/password and call functions
       console.log(balance);
     });
 
-    // send http address or file system image
+    // send file system image
     decaptcher.postPicture(path.join(__dirname, "captcha.jpg"), function(err, result) {
+      console.log(result);
+    });
+
+    // send http address with mime type
+    decaptcher.postPicture("http://www.example.org/recaptcha.ashx", "image/jpeg", function(err, result) {
       console.log(result);
     });
 
@@ -30,7 +35,7 @@ Require library, Create object with your username/password and call functions
 
 * getBalance(callback) : Get your current balance status
 
-* postPicture(url/fs, callback): send picture for process
+* postPicture(url/fs, mimeType, callback): send picture for process. mimeType parameter is not mandatory
 
 * reportBadResult(majorID, minorID, callback): send bad picture process report
 

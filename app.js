@@ -6,7 +6,10 @@
 var request  = require("request"),
     mime     = require("mime"),
     fs       = require("fs"),
-    url      = require("url");
+    url      = require("url"),
+    settings = require("./settings"),
+    util     = require("./util"),
+    log      = require("./log").log;
 
 
 var decaptcher = exports.decaptcher = function(username, password) {
@@ -26,19 +29,23 @@ decaptcher.prototype.getBalance = function(callback) {
   var self = this;
   request.post("http://poster.de-captcher.com",
     { form: {
-      function: "balance",
-      username: self.username,
-      password: self.password
-    }
+        function: "balance",
+        username: self.username,
+        password: self.password
+      }
     },
     function (error, response, body) {
       if (error) {
-        callback((new Date()).toLocaleString() + " ==> [ERROR getBalance] ==> " + error);
+        var msg = (new Date()).toLocaleString() + " ==> [ERROR getBalance] ==> " + error;
+        if (settings.log) log.write(msg);
+        callback(msg);
       } else {
         if (response.statusCode == 200 && body) {
           var balance = Number(body);
+          if (settings.log) log.write((new Date()).toLocaleString() + " ==> [INFO getBalance] ==> " + balance);
           callback(null, balance);
         } else {
+          if (settings.log) log.write((new Date()).toLocaleString() + " ==> [WARNING getBalance] ==> No result");
           callback(null, -1);
         }
       }
@@ -56,8 +63,59 @@ decaptcher.prototype.getBalance = function(callback) {
  * @param callback
  */
 decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) {
-  var self = this;
-  console.log((new Date()).toLocaleString() + " ==> [INFO postPicture] ==> " + pictureRequest);
+  var self = this,
+      msg = (new Date()).toLocaleString() + " ==> [INFO postPicture] ==> " + pictureRequest;
+
+  function makeRequest(mimeType, fileName) {
+    request({
+        url: 'http://poster.de-captcher.com',
+        method: 'POST',
+        headers: {
+          'content-type' : 'multipart/form-data'
+        },
+        multipart: [{
+          'Content-Disposition' : 'form-data; name="function"',
+          'body': "picture2"
+        }, {
+          'Content-Disposition' : 'form-data; name="username"',
+          'body': self.username
+        }, {
+          'Content-Disposition' : 'form-data; name="password"',
+          'body': self.password
+        } ,{
+          'Content-Disposition' : 'form-data; name="pict"',
+          'Content-Type' : mimeType,
+          'body': fs.readFileSync(fileName)
+        }]
+      },
+      function(error, response, body) {
+        if (error) {
+          var msg = (new Date()).toLocaleString() + " ==> [ERROR postPicture] ==> " + error;
+          if (settings.log) log.write(msg);
+          callback(msg);
+        } else {
+          if (response.statusCode == 200 && body) {
+            var items = body.split("|");
+            var result = {
+              resultCode : items[0],
+              majorID    : items[1],
+              minorID    : items[2],
+              Type       : items[3],
+              Timeout    : items[4],
+              Text       : items[5]
+            };
+
+            if (settings.log) log.write((new Date()).toLocaleString() + " ==> [INFO ReCAptcha] ==> " + JSON.stringify(result, null, 2));
+            callback(null, result);
+          } else {
+            callback(null, -1);
+          }
+        }
+      });
+  }
+
+  if (settings.log) log.write(msg);
+  console.log(msg);
 
   if (!callback && mimeType && typeof(mimeType) == "function") {
     callback = mimeType;
@@ -65,50 +123,41 @@ decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) 
   }
 
   var requestItem = url.parse(pictureRequest),
-      webRequest = /^http|^https|^ftp/.test(requestItem.protocol);
+      webRequest = /^http|^https|^ftp/.test(requestItem.protocol),
+      streamFileName = null;
 
-  request({
-      url: 'http://poster.de-captcher.com',
-      method: 'POST',
-      headers: {
-        'content-type' : 'multipart/form-data'
-      },
-      multipart: [{
-        'Content-Disposition' : 'form-data; name="function"',
-        'body': "picture2"
-      }, {
-        'Content-Disposition' : 'form-data; name="username"',
-        'body': self.username
-      }, {
-        'Content-Disposition' : 'form-data; name="password"',
-        'body': self.password
-      } ,{
-        'Content-Disposition' : 'form-data; name="pict"',
-        'Content-Type' : mimeType ? mimeType : mime.lookup(pictureRequest),
-        'body': webRequest ? request(pictureRequest) : fs.readFileSync(pictureRequest)
-      }]
-    },
-    function(error, response, body) {
-      if (error) {
-        callback((new Date()).toLocaleString() + " ==> [ERROR postPicture] ==> " + error);
-      } else {
-        if (response.statusCode == 200 && body) {
-          var items = body.split("|");
-          var result = {
-              resultCode : items[0],
-              majorID    : items[1],
-              minorID    : items[2],
-              Type       : items[3],
-              Timeout    : items[4],
-              Text       : items[5]
-          };
+  if (webRequest) {
+    var fileName = util.getFileName();
 
-          callback(null, result);
-        } else {
-          callback(null, -1);
-        }
-      }
+    if (!mimeType) {
+      mimeType = mime.lookup(pictureRequest);
+    }
+
+    if (!/^image/.test(mimeType)) {
+      mimeType = "image/jpeg";
+    }
+
+    var extension = mime.extension(mimeType);
+    if (extension) {
+      fileName += "." + extension;
+    }
+
+    streamFileName = path.join(__dirname, ".images", fileName);
+    var ws = fs.createWriteStream(streamFileName);
+
+    ws.on("error", function(err) {
+      console.log((new Date()).toLocaleString() + " ==> [ERROR postPicture WRITE STREAM] ==> " + err);
     });
+
+    ws.on("drain", function() {
+      makeRequest(mimeType, streamFileName);
+    });
+
+    request(pictureRequest).pipe(ws);
+
+  } else {
+    makeRequest(mime.lookup(pictureRequest), pictureRequest);
+  }
 };
 
 /**
