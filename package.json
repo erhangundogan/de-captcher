@@ -1,6 +1,6 @@
 {
   "name": "de-captcher",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "de-captcher.com nodejs library",
   "main": "app.js",
   "dependencies": {
@@ -8,7 +8,7 @@
     "mime": ">= 1.2.10"
   },
   "devDependencies": {},
-  "engines": { "node": ">=0.11.4" },
+  "engines": { "node": ">=0.8.21" },
   "keywords": [ "captcha", "recaptcha", "de-captcher", "image processing" ],
   "repository": {
     "type": "git",
