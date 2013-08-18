@@ -1,6 +1,4 @@
 node_modules/
-.images/
-.log/
 .idea/
 .git/
 .travis.yml
