@@ -4,7 +4,6 @@
  */
 
 var request  = require("request"),
-    http     = require("http"),
     mime     = require("mime"),
     fs       = require("fs"),
     path     = require("path"),
@@ -147,22 +146,20 @@ decaptcher.prototype.postPicture = function(pictureRequest, mimeType, callback) 
 
     streamFileName = path.join(__dirname, ".images", fileName);
     var ws = fs.createWriteStream(streamFileName, {flags:"a"});
-    var imageData = null;
 
-    ws.on("open", function(fd) {
-      http.request(pictureRequest, function(res) {
-        res.on("data", function(chunk) {
-          ws.write(chunk);
-        });
-
-        res.on("end", function() {
-          ws.end();
-          var msg = (new Date()).toLocaleString() + " ==> [INFO postPicture SAVE FINISHED]";
-          if (settings.log) log.write(msg);
-          makeRequest(mimeType, streamFileName);
-        });
-      });
+    ws.on("error", function(err) {
+      var msg = (new Date()).toLocaleString() + " ==> [ERROR postPicture WRITE STREAM] ==> " + err;
+      if (settings.log) log.write(msg);
+      console.log(msg);
     });
+
+    ws.on("close", function() {
+      var msg = (new Date()).toLocaleString() + " ==> [INFO postPicture SAVE FINISHED]";
+      if (settings.log) log.write(msg);
+      makeRequest(mimeType, streamFileName);
+    });
+
+    request(pictureRequest).pipe(ws);
 
   } else {
     makeRequest(mime.lookup(pictureRequest), pictureRequest);
