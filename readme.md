@@ -6,6 +6,7 @@ You need an account from de-captcher.com to use this library.
 ## Quickstart
 Require library, Create object with your username/password and call functions
 
+    var path = require("path");
     var Decaptcher = require("de-captcher").decaptcher;
     var decaptcher = new Decaptcher("username", "password");
 
