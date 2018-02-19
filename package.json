@@ -4,8 +4,10 @@
   "description": "de-captcher.com nodejs library",
   "main": "app.js",
   "dependencies": {
-    "request": ">= 2.25.0",
-    "mime": ">= 1.2.10"
+    "mime": ">= 1.2.10",
+    "mime-db": "^1.33.0",
+    "mime-lookup": "0.0.2",
+    "request": ">= 2.25.0"
   },
   "devDependencies": {},
   "engines": { "node": ">=0.8.21" },
