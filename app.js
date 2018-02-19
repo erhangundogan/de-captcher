@@ -3,8 +3,10 @@
  * by Erhan Gundogan <erhan@trposta.net>
  */
 
+var MimeLookup = require('mime-lookup');
+var mime = new MimeLookup(require('mime-db'));
+
 var request  = require("request"),
-    mime     = require("mime"),
     fs       = require("fs"),
     path     = require("path"),
     url      = require("url"),
