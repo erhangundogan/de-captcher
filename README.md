@@ -7,7 +7,8 @@ You need an account for authentication so that you can use this library.
 
 ## Quickstart
 Require library, Create object with your username/password and call functions. Use node 0.10.15 Stable version.
-
+    
+    var path = require("path");
     var Decaptcher = require("de-captcher").decaptcher;
     var decaptcher = new Decaptcher("username", "password");
 
